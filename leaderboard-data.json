@@ -1,0 +1,14 @@
+{
+  "lastUpdated": "2025-09-05T11:25:53.180Z",
+  "generatedBy": "GitHub Actions",
+  "totalModels": 1,
+  "data": [
+    {
+      "model_id": "gemini:gemini-2.5-flash",
+      "category": "User Test",
+      "avg_score": 75,
+      "test_count": 2,
+      "latest_test": "2025-09-01T22:23:02.254096+00:00"
+    }
+  ]
+}
