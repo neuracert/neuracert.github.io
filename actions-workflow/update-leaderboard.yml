@@ -1,0 +1,117 @@
+name: Update Leaderboard Data
+
+on:
+  schedule:
+    # Run every hour
+    - cron: '0 * * * *'
+  workflow_dispatch: # Allow manual trigger
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/update-leaderboard.yml'
+
+jobs:
+  update-leaderboard:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: Install dependencies
+        run: npm install @supabase/supabase-js
+        
+      - name: Generate leaderboard data
+        env:
+          SUPABASE_SERVICE_KEY: ${{ secrets.SERVICE_ROLE_API_KEY }}
+        run: |
+          cat > generate-leaderboard.js << 'EOF'
+          import { createClient } from '@supabase/supabase-js';
+          import fs from 'fs';
+          
+          // Read credentials from client-side config
+          const clientTs = fs.readFileSync('client/src/integrations/supabase/client.ts', 'utf-8');
+          const urlMatch = clientTs.match(/const SUPABASE_URL = "([^"]+)"/);
+
+          if (!urlMatch) {
+            console.error('Could not find Supabase URL in client/src/integrations/supabase/client.ts');
+            process.exit(1);
+          }
+
+          const supabaseUrl = urlMatch[1];
+          const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+          
+          if (!supabaseUrl || !supabaseKey) {
+            console.error('Missing Supabase credentials');
+            process.exit(1);
+          }
+          
+          const supabase = createClient(supabaseUrl, supabaseKey);
+          
+          async function generateLeaderboardData() {
+            try {
+              console.log('Fetching leaderboard data from Supabase...');
+              
+              const { data: newData, error } = await supabase
+                .rpc('get_model_scores');
+              
+              if (error) {
+                console.error('Error fetching data:', error);
+                process.exit(1);
+              }
+              
+              let oldData = { data: [] };
+              if (fs.existsSync('leaderboard-data.json')) {
+                const fileContent = fs.readFileSync('leaderboard-data.json', 'utf-8');
+                oldData = JSON.parse(fileContent);
+              }
+
+              const mergedData = new Map(oldData.data.map(item => [item.model_name, item]));
+
+              newData.forEach(item => {
+                mergedData.set(item.model_name, item);
+              });
+
+              const finalData = Array.from(mergedData.values());
+
+              const leaderboardData = {
+                lastUpdated: new Date().toISOString(),
+                generatedBy: 'GitHub Actions',
+                totalModels: finalData.length,
+                data: finalData
+              };
+              
+              // Write to leaderboard-data.json
+              fs.writeFileSync(
+                'leaderboard-data.json', 
+                JSON.stringify(leaderboardData, null, 2)
+              );
+              
+              console.log(`Generated leaderboard data with ${finalData.length} models`);
+              console.log('Data written to leaderboard-data.json');
+              
+            } catch (error) {
+              console.error('Failed to generate leaderboard data:', error);
+              process.exit(1);
+            }
+          }
+          
+          generateLeaderboardData();
+          EOF
+          
+          node generate-leaderboard.js
+          
+      - name: Commit and push if changed
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add leaderboard-data.json
+          git diff --staged --quiet || git commit -m "Update leaderboard data $(date -u)"
+          git push

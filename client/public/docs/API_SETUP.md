@@ -10,7 +10,7 @@ This application supports multiple LLM providers. Each provider requires an API 
 
 **Models Supported:**
 - GPT-4o (Multimodal)
-- GPT-4o Mini  
+- GPT-4o Mini
 - GPT-3.5 Turbo
 
 **Setup:**
@@ -45,7 +45,7 @@ This application supports multiple LLM providers. Each provider requires an API 
 
 **Models Supported:**
 - Meta Llama 3.1 8B (Free)
-- DeepSeek Chat V3 (Free)  
+- DeepSeek Chat V3 (Free)
 - Anthropic Claude models (Paid)
 - Many other models
 
@@ -76,7 +76,7 @@ This application supports multiple LLM providers. Each provider requires an API 
 
 ### Best Practices
 1. **Use Separate Keys**: Create dedicated keys for this application
-2. **Set Spending Limits**: Configure usage limits on your provider accounts  
+2. **Set Spending Limits**: Configure usage limits on your provider accounts
 3. **Monitor Usage**: Regularly check your usage on provider dashboards
 4. **Rotate Keys**: Periodically regenerate your API keys
 5. **Secure Environment**: Don't use shared computers for API key entry
@@ -87,7 +87,7 @@ This application supports multiple LLM providers. Each provider requires an API 
 - Use format: `gpt-4o-mini` or your fine-tuned model ID
 - Must be accessible with your API key
 
-### Gemini Custom Models  
+### Gemini Custom Models
 - Use format: `gemini-1.5-flash` or `models/gemini-1.5-pro`
 - Check [Google's model list](https://ai.google.dev/gemini-api/docs/models/gemini)
 
@@ -104,7 +104,7 @@ This application supports multiple LLM providers. Each provider requires an API 
 - Check if key has required permissions
 - Ensure billing is set up on provider account
 
-**"Model Not Found" Error:**  
+**"Model Not Found" Error:**
 - Verify model name spelling
 - Check if model is available in your region
 - Ensure your account has access to the model

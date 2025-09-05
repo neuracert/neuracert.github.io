@@ -49,6 +49,12 @@ export const HeroSection = () => {
                 View Results
               </Button>
             </Link>
+            <Link to="/docs">
+              <Button size="lg" variant="outline" className="border-primary/30 hover:border-primary/50">
+                <Play className="mr-2 h-4 w-4" />
+                Docs
+              </Button>
+            </Link>
           </div>
           
           {/* Feature highlights */}

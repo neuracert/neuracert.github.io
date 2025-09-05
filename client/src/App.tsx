@@ -9,6 +9,7 @@ import BattlePage from "./pages/BattlePage";
 import LeaderboardPage from "./pages/LeaderboardPage";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import NotFound from "./pages/NotFound";
+import DocsPage from "./pages/DocsPage";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,8 @@ const App = () => (
           <Route path="/battle" element={<BattlePage />} />
           <Route path="/leaderboard" element={<LeaderboardPage />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/docs" element={<DocsPage />} />
+          <Route path="/docs/:slug" element={<DocsPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
