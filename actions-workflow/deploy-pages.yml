@@ -37,12 +37,18 @@ jobs:
         run: npm install
       - name: Build
         run: npm run build
+      - name: Create redirect directories
+        run: |
+          mkdir -p web/test web/leaderboard web/docs
+          cp web/index.html web/test/index.html
+          cp web/index.html web/leaderboard/index.html
+          cp web/index.html web/docs/index.html
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './web'
+          path: '${{ github.workspace }}/web'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
